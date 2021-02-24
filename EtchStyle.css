@@ -3,24 +3,43 @@
     --column-count: 1;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+  
 body {
-    max-width: 960px;
-    max-height: 960px;
+    text-align: center;
+    background-color: blanchedalmond;
+}
+
+header {
+    margin-top: 3rem;
+    padding: 2rem;
+    font-size: 3rem;
+}
+  
+
+#wrapper {
+    padding: 1rem;
 }
 
 #container {
     display: grid;
-    gap: 1em;
-    grid-template-columns: repeat(var(--row-count), 1fr);
-    grid-template-rows: repeat(var(--column-count), 1fr);
+    grid-template-columns: repeat(var(--row-count), minmax(min-content, 1fr));
+    grid-template-rows: repeat(var(--column-count), minmax(min-content, 1fr));
+    min-height: 500px;
+    max-width: 500px;
+    margin: 2rem auto;
+    border: 2px solid black
 }
 
 .item {
-    padding: 1em;
-    text-align: center;
     border: 1px solid black;
     background-color: white;
-    color: black;
     transition: all .2s ease;
 }
 
