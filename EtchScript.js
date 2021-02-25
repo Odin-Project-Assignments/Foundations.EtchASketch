@@ -1,5 +1,6 @@
 const container = document.getElementById("container");
 const resetButton = document.getElementById("reset");
+const drawEraseButton = document.getElementById("draw-erase");
 
 /**
  * Makes a grid of div elements based on the parameters passed in
@@ -17,6 +18,14 @@ function makeGrid(numberOfRows, numberOfColumns){
 }
 
 /**
+ * Creates a default grid
+ */
+function setDefaultGrid(){
+    makeGrid(16, 16);
+    addHoverEffect(document.querySelectorAll(".item"));
+}
+
+/**
  * Removes all children elements from a specified parent element
  * @param {*} parentElement 
  */
@@ -31,15 +40,73 @@ function removeAllChildrenElements(parentElement){
  * generates it. Also, sanitizes user input to ensure valid input is given
  */
 function resetGrid(){
-    removeAllChildrenElements(container);
-    let number = parseInt(prompt("How many squares per side would you like for the grid? (must be between 1 and 100)"));
-    while(!(number > 0) || !(number < 101)){
-        number = parseInt(prompt("Please enter a valid number!"));
+    let number = prompt("How many squares per side would you like for the grid? (must be between 1 and 100)");    
+    if(number === null){
+        return;
+    }
+    
+    number = parseInt(number);
+    while(!(number > 0) || !(number < 101) || Number.isNaN(number)){
+        number = prompt("Please enter a valid numbe between 1 and 100!");
+        if(number === null){
+            return;
+        }
+        number = parseInt(number);
     }
 
+    removeAllChildrenElements(container);
     makeGrid(number, number);
+    drawEraseButton.innerText = "Erase";
+    addHoverEffect(document.querySelectorAll(".item"));
 }
 
-makeGrid(16, 16);
+/**
+ * Adds an event listerner to every item in the arguments array that is passed in; each item
+ * is given a mouse-enter event, where the "item-highlight" class is added to the element
+ * if it is not currently assigned
+ * @param {*} gridItems  
+ */
+function addHoverEffect(gridItems){
+    if(gridItems.length < 1){
+        return; 
+    }
+    gridItems.forEach(item => {
+        item.addEventListener("mouseenter", e => {
+            if(!e.target.classList.contains("item-highlight")){
+                e.target.classList.add("item-highlight");
+            } 
+        })
+    })
+}
+
+/**
+ * Adds an event listerner to every item in the arguments array that is passed in; each item
+ * is given a mouse-enter event, where the "item-highlight" class is removed from the element
+ * if it is currently assigned
+ * @param {*} gridItems  
+ */
+function removeHoverEffect(gridItems){
+    if(gridItems.length < 1){
+        return; 
+    }
+    gridItems.forEach(item => {
+        item.addEventListener("mouseenter", e => {
+            if(e.target.classList.contains("item-highlight")){
+                e.target.classList.remove("item-highlight");
+            } 
+        })
+    })
+}
+
+window.addEventListener('load', setDefaultGrid);
 resetButton.addEventListener('click', resetGrid);
+drawEraseButton.addEventListener('click', e => {
+    if (e.target.innerText === "Erase"){
+        e.target.innerText = "Draw";
+        removeHoverEffect(document.querySelectorAll(".item"));
+    } else if (e.target.innerText === "Draw"){
+        e.target.innerText = "Erase";
+        addHoverEffect(document.querySelectorAll(".item"));
+    }
+});
 
