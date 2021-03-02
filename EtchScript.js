@@ -61,6 +61,23 @@ function resetGrid(){
 }
 
 /**
+ * Generates a random color for the '--random-color' css variable; checks the current percentage of the '--lightness' css
+ * variable, and if it is greater than 9, it will subtract 10 from the total percentage and reset the new value
+ * for the variable
+ * @param {*} item 
+ */
+function addRandomColor(item){
+    randomNumber = Math.floor((Math.random() * 360));
+    item.style.setProperty('--random-color', randomNumber);
+    lightnessPercentageAsInt = parseInt(getComputedStyle(item).getPropertyValue('--lightness').replace('%',''));
+    if(lightnessPercentageAsInt > 9){
+        lightnessPercentageAsInt -= 10
+    }
+    item.style.setProperty('--lightness', lightnessPercentageAsInt.toString() + '%')
+
+}
+
+/**
  * Adds an event listerner to every item in the arguments array that is passed in; each item
  * is given a mouse-enter event, where the "item-highlight" class is added to the element
  * if it is not currently assigned
@@ -75,6 +92,7 @@ function addHoverEffect(gridItems){
             if(!e.target.classList.contains("item-highlight")){
                 e.target.classList.add("item-highlight");
             } 
+            addRandomColor(e.target);
         })
     })
 }
